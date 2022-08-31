@@ -14,14 +14,24 @@ import GetCookie from './hooks/getCookie';
 function App() {
   const [aceitou, SetAceitou] = useState(false);
   const [aceitouEntrouNovamente, SetAceitouEntrouNovamente] = useState(false);
+  const audio1 = new Audio('./assets/rodrigo_faro-sonoplastia-nao.mp3');
+  const audio2 = new Audio('./assets/rodrigo_faro-sonoplastia-iha.mp3');
+  const audio3 = new Audio('./assets/parabens.mp3');
 
   function aceitar(){
     SetAceitou(true);
 
     SetCookie('aceitou', JSON.stringify(1));
+    
+    audio1.play();
+    audio2.play();
+    audio3.play();
   }
 
   useEffect(() => {
+    audio1.load();
+    audio2.load();
+    audio3.load();
     var valor = GetCookie('aceitou');
     SetAceitouEntrouNovamente(valor == 1 ? true : false);
   }, []);
