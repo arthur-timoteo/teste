@@ -4,7 +4,7 @@ const SetCookie = (cookiename, cookievalue) => {
     Cookie.set(cookiename, cookievalue, {
         expires: 1,
         secure: false,
-        sameSite: 'strict',
+        sameSite: 'Strict',
         path: '/'
     });
 }

@@ -1,5 +1,4 @@
-import React, { useState, useEffect} from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect, AudioHTMLAttributes, useRef } from 'react';
 import './App.css';
 import { CardAceitou } from './components/CardAceitou';
 import { CardConfirmar } from './components/CardConfirmar';
@@ -14,27 +13,35 @@ import GetCookie from './hooks/getCookie';
 function App() {
   const [aceitou, SetAceitou] = useState(false);
   const [aceitouEntrouNovamente, SetAceitouEntrouNovamente] = useState(false);
-  const audio1 = new Audio('./assets/rodrigo_faro-sonoplastia-nao.mp3');
-  const audio2 = new Audio('./assets/rodrigo_faro-sonoplastia-iha.mp3');
-  const audio3 = new Audio('./assets/parabens.mp3');
+  const [sound1, SetSound1] = useState(true);
+  const [sound2, SetSound2] = useState(false);
+  const [sound3, SetSound3] = useState(false);
+  const [buttonFocus, SetButtonFocus] = useState(false);
 
   function aceitar(){
     SetAceitou(true);
-
     SetCookie('aceitou', JSON.stringify(1));
-    
-    audio1.play();
-    audio2.play();
-    audio3.play();
+    SetSound1(false);
+    SetSound2(true);
   }
 
   useEffect(() => {
-    audio1.load();
-    audio2.load();
-    audio3.load();
     var valor = GetCookie('aceitou');
-    SetAceitouEntrouNovamente(valor == 1 ? true : false);
+    SetAceitouEntrouNovamente(valor === 1 ? true : false);
   }, []);
+
+  function negar(){
+    SetButtonFocus(true);
+    SetSound3(true);
+
+    setTimeout(() => {
+      SetSound3(false);
+    }, 350);
+    
+    setTimeout(() => {
+      SetButtonFocus(false);
+    }, 4000);
+  }
 
   return (
     <div className="background">
@@ -46,8 +53,8 @@ function App() {
             <div className="question-area">
               <h1 className="question-area-title">Cara Dama, você aceita firmar uma relação comigo?</h1>
     
-              <button className="question-area-btn question-are-btn-yes" onClick={aceitar}>SIM</button>
-              <button className="question-area-btn question-are-btn-no">NÃO</button>
+              <button className="question-area-btn question-are-btn-yes" onClick={aceitar}>Sim</button>
+              <button className={`question-area-btn question-are-btn-no ${buttonFocus ? "focus" : ""}`} disabled={buttonFocus} onClick={negar}>Não</button>
             </div>
           :
             <>
@@ -58,6 +65,10 @@ function App() {
 
       <img className="img-peter-pan" src={PeterPan} />
       <img className="img-tinker-bell" src={TinkerBell} />
+
+      { sound1 && <audio src={require('./assets/musica_tema_bela_fera.mp3')} autoPlay loop />}
+      { sound2 && <audio src={require('./assets/fogos.mp3')} autoPlay />}
+      { sound3 && <audio src={require('./assets/rodrigo_faro_nao.mp3')} autoPlay />}
     </div>
   );
 }
